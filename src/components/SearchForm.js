@@ -6,33 +6,17 @@ import './style.css'
 
 const SearchForm = () => {
 
-    const [ bookUrl, setBookUrl ] = useState();
-    const [ bookRes, setBookRes ] = useState();
     const [ bookList, setBookList ] = useState();
+    const [ filterList, setFilterList ] = useState();
     const bookInput = useRef();
 
     useEffect(()=>{
-        if (bookUrl){
-        axios.get(`http://openlibrary.org/search.json?q=${bookUrl}`)
-        .then((res)=>{setBookRes(res.data.docs[0])})
-        .catch((err)=>{console.log(err)});
-    }
-    },[bookUrl])
-
-    useEffect(()=>{
         axios.get(`http://openlibrary.org/search.json?author=tolkien`)
-        .then((res)=>{setBookList(res.data.docs)})
+        .then((res)=>{setBookList(res.data.docs)
+                        setFilterList(res.data.docs)})
         .catch((err)=>{console.log(err)});
     },[])
 
-    const bookSearch = (e) => {
-        e.preventDefault();
-        setBookUrl(formatBookName(bookInput.current.value));
-    }
-
-    const formatBookName = (name) => {
-        return name.split(' ').join('+');
-    }
     const handleSearch = (e) => {
         if(bookInput.current.value){
             let newList = bookList.filter((data)=>{
@@ -41,7 +25,7 @@ const SearchForm = () => {
                 .toLowerCase()
                 .includes(bookInput.current.value.toLowerCase())
             })
-            setBookList(newList);
+            setFilterList(newList);
         }
     }
 
@@ -51,16 +35,15 @@ const SearchForm = () => {
             <form id="searchForm">
                 <label for="bookSearch">Please enter the book name</label>
                 <input type="text" name="bookSearch" id="bookSearch" onChange={handleSearch} ref={bookInput} />
-                <button type="submit" onClick={bookSearch} >Search</button>
                 {/* <BookCard data={bookRes} /> */}
                 <div className="book-card-container">
-                {bookList && bookList.map((item, key) => {
+                {filterList && filterList.map((item, key) => {
                     return (
                         <BookCard key={key} data={item} />
                     )
                 })}
                 </div>
-                {console.log(bookList)}
+                {console.log(filterList)}
             </form>
         </div>
     );
