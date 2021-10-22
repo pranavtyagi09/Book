@@ -8,6 +8,7 @@ const SearchForm = () => {
 
     const [ bookUrl, setBookUrl ] = useState();
     const [ bookRes, setBookRes ] = useState();
+    const [ bookList, setBookList ] = useState();
     const bookInput = useRef();
 
     useEffect(()=>{
@@ -17,6 +18,12 @@ const SearchForm = () => {
         .catch((err)=>{console.log(err)});
     }
     },[bookUrl])
+
+    useEffect(()=>{
+        axios.get(`http://openlibrary.org/search.json?author=tolkien`)
+        .then((res)=>{setBookList(res.data.docs)})
+        .catch((err)=>{console.log(err)});
+    },[])
 
     const bookSearch = (e) => {
         e.preventDefault();
@@ -34,8 +41,15 @@ const SearchForm = () => {
                 <label for="bookSearch">Please enter the book name</label>
                 <input type="text" name="bookSearch" id="bookSearch" ref={bookInput} />
                 <button type="submit" onClick={bookSearch} >Search</button>
-                <BookCard data={bookRes} />
-                {console.log(bookRes)}
+                {/* <BookCard data={bookRes} /> */}
+                <div className="book-card-container">
+                {bookList && bookList.map((item, key) => {
+                    return (
+                        <BookCard key={key} data={item} />
+                    )
+                })}
+                </div>
+                {console.log(bookList)}
             </form>
         </div>
     );
