@@ -1,0 +1,27 @@
+.search-box {
+    margin: auto;
+    font-size: 1.5em;
+    max-width: 50em;
+    max-width: 30em;
+    padding: 5em 2em;
+}
+
+.search-box input {
+    height: 2em;
+    width: calc(100% - 20px);
+    margin-top: 0.5em;
+}
+
+.search-box button {
+    height: 2em;
+    width: 100%;
+    margin-top: 1em;
+    font-size: 0.8em;
+}
+
+.book-card{
+    padding: 1em 0;
+        margin-top: 2em;
+        border: 1px solid black;
+        box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
