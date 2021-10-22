@@ -33,13 +33,24 @@ const SearchForm = () => {
     const formatBookName = (name) => {
         return name.split(' ').join('+');
     }
+    const handleSearch = (e) => {
+        if(bookInput.current.value){
+            let newList = bookList.filter((data)=>{
+                return Object.values(data)
+                .join(" ")
+                .toLowerCase()
+                .includes(bookInput.current.value.toLowerCase())
+            })
+            setBookList(newList);
+        }
+    }
 
     return (
         <div className="search-box" >
             <h1>Book Search App</h1>
             <form id="searchForm">
                 <label for="bookSearch">Please enter the book name</label>
-                <input type="text" name="bookSearch" id="bookSearch" ref={bookInput} />
+                <input type="text" name="bookSearch" id="bookSearch" onChange={handleSearch} ref={bookInput} />
                 <button type="submit" onClick={bookSearch} >Search</button>
                 {/* <BookCard data={bookRes} /> */}
                 <div className="book-card-container">
