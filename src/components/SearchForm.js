@@ -64,12 +64,11 @@ const SearchForm = () => {
                     <input type="text" name="bookSearch" id="bookSearch" onChange={handleSearch} ref={bookInput} disabled={!bookList} />
                 </form>
                 <div className="sort-by">
-                    <label for="order">Sort:</label>
+                    <label for="order">Sort Booklist by:</label>
                     <select name="order" id="order" onChange={handleSort} disabled={!bookList} >
-                        <option value="" disabled selected>Sort Booklist by</option>
+                        <option value="" disabled selected>Please select</option>
                         <option value="title">Title</option>
                         <option value="date">Date</option>
-                        
                     </select>
                 </div>
             {filterList && filterList[0] && <BookResults key={filterList[0].title} data={filterList} />}
