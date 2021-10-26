@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import BookCard from './BookCard'
+import BookResults from './BookResults'
 import axios from 'axios';
 import './style.css'
 
@@ -11,11 +11,27 @@ const SearchForm = () => {
     const bookInput = useRef();
 
     useEffect(()=>{
-        axios.get(`http://openlibrary.org/search.json?author=tolkien`)
-        .then((res)=>{setBookList(res.data.docs)
-                        setFilterList(res.data.docs)})
-        .catch((err)=>{console.log(err)});
+        pullData();
     },[])
+
+    const pullData = () => {
+        axios.get(`http://openlibrary.org/search.json?author=tolkien`)
+        .then((res)=>{
+                        setBookList(res.data.docs)
+                        setFilterList(res.data.docs)
+                    })
+        .catch((err)=>{console.log(err)});
+    }
+
+    const compare = ( a, b ) => {
+        if ( a.title < b.title ){
+          return -1;
+        }
+        if ( a.title > b.title ){
+          return 1;
+        }
+        return 0;
+      }
 
     const handleSearch = (e) => {
         if(bookInput.current.value){
@@ -29,22 +45,34 @@ const SearchForm = () => {
         }
     }
 
+    const handleSort = (e) => {
+        if (e.target.value === "title"){
+            let newList = filterList.sort(compare);
+            setFilterList([...newList]);
+        }
+        else if (e.target.value === "date"){
+            let newList = filterList.sort((a,b)=>{ return (new Date(a.publish_date[0]) - new Date(b.publish_date[0]))})
+            setFilterList([...newList]);
+        }
+    }
+
     return (
         <div className="search-box" >
             <h1>Book Search App</h1>
-            <form id="searchForm">
-                <label for="bookSearch">Please enter the book name</label>
-                <input type="text" name="bookSearch" id="bookSearch" onChange={handleSearch} ref={bookInput} />
-                {/* <BookCard data={bookRes} /> */}
-                <div className="book-card-container">
-                {filterList && filterList.map((item, key) => {
-                    return (
-                        <BookCard key={key} data={item} />
-                    )
-                })}
+                <form id="searchForm" className="search-form">
+                    <label for="bookSearch">Please enter the book name</label>
+                    <input type="text" name="bookSearch" id="bookSearch" onChange={handleSearch} ref={bookInput} disabled={!bookList} />
+                </form>
+                <div className="sort-by">
+                    <label for="order">Sort:</label>
+                    <select name="order" id="order" onChange={handleSort} disabled={!bookList} >
+                        <option value="" disabled selected>Sort Booklist by</option>
+                        <option value="title">Title</option>
+                        <option value="date">Date</option>
+                        
+                    </select>
                 </div>
-                {console.log(filterList)}
-            </form>
+            {filterList && filterList[0] && <BookResults key={filterList[0].title} data={filterList} />}
         </div>
     );
 }
