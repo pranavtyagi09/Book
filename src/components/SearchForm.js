@@ -15,7 +15,7 @@ const SearchForm = () => {
     },[])
 
     const pullData = () => {
-        axios.get(`http://openlibrary.org/search.json?author=tolkien`)
+        axios.get(`https://cors-anywhere.herokuapp.com/http://openlibrary.org/search.json?author=tolkien`)
         .then((res)=>{
                         setBookList(res.data.docs)
                         setFilterList(res.data.docs)
